@@ -1,0 +1,1 @@
+- `pwrite` also append if file is opened with flag `O_APPEND`.
