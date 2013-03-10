@@ -1,3 +1,5 @@
+#include <myapue.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,26 +36,17 @@ void catfd(int fd) {
   ssize_t bytes;
   
   while (0 < (bytes = read(fd, buf, BUF_SIZE))) {
-    if (bytes != write(STDOUT_FILENO, buf, bytes)) {
-      fprintf(stderr, "Write error: %s\n", strerror(errno));
-      exit(EXIT_FAILURE);
-    }
+    err_assert(bytes == write(STDOUT_FILENO, buf, bytes));
   }
 
-  if (bytes != 0) {
-    fprintf(stderr, "Read error: %s\n", strerror(errno));
-    exit(EXIT_FAILURE);
-  }
+  err_assert(bytes == 0);
 }
 
 void catfile(const char* path) {
   int fd;
 
   fd = open(path, O_RDONLY);
-  if (fd < 0) {
-    fprintf(stderr, "Cannot open the file %s: %s\n", path, strerror(errno));
-    exit(EXIT_FAILURE);
-  }
+  err_assert(fd =! -1);
   catfd(fd);
   close(fd);
 }
